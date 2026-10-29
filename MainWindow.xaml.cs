@@ -14,9 +14,12 @@ namespace WinSpotLight;
 public partial class MainWindow : Window
 {
     private const int HotkeyId = 0x534C;
+    private const double BarWidth = 740;
 
-    private ModifierKeys _hotkeyModifiers = ModifierKeys.Alt;
+    private ModifierKeys _hotkeyModifiers = ModifierKeys.Control | ModifierKeys.Alt;
     private Key _hotkeyKey = Key.Space;
+
+    private bool _blurEnabled = true;
 
     private readonly SearchEngine _engine = new();
     private readonly DispatcherTimer _debounceTimer;
@@ -84,6 +87,8 @@ public partial class MainWindow : Window
         _hotkeyModifiers = modifiers;
         _hotkeyKey = key;
     }
+
+    public void SetBlurEnabled(bool enabled) => _blurEnabled = enabled;
 
     public bool UpdateHotkey(ModifierKeys modifiers, Key key)
     {
@@ -157,20 +162,40 @@ public partial class MainWindow : Window
         NativeMethods.GetCursorPos(out var cursor);
         var screen = System.Windows.Forms.Screen.FromPoint(new System.Drawing.Point(cursor.X, cursor.Y));
         var bounds = screen.Bounds;
+        var work = screen.WorkingArea;
         double scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
 
-        // Cover the whole monitor (including the taskbar) with the blur overlay.
-        Left = bounds.Left / scale;
-        Top = bounds.Top / scale;
-        Width = bounds.Width / scale;
-        Height = bounds.Height / scale;
-
-        // Place the bar near the top, centered.
-        RootBorder.Margin = new Thickness(0, bounds.Height / scale * 0.22, 0, 0);
+        if (_blurEnabled)
+        {
+            // Full-screen blur overlay (covers the taskbar too).
+            SizeToContent = SizeToContent.Manual;
+            Left = bounds.Left / scale;
+            Top = bounds.Top / scale;
+            Width = bounds.Width / scale;
+            Height = bounds.Height / scale;
+            RootBorder.Margin = new Thickness(0, bounds.Height / scale * 0.22, 0, 0);
+        }
+        else
+        {
+            // Small centered bar (no overlay).
+            SizeToContent = SizeToContent.Height;
+            Left = work.Left / scale + (work.Width / scale - BarWidth) / 2;
+            Top = work.Top / scale + work.Height / scale * 0.22;
+            Width = BarWidth;
+            Height = double.NaN;
+            RootBorder.Margin = new Thickness(0);
+        }
     }
 
     private void CaptureBackground()
     {
+        if (!_blurEnabled)
+        {
+            BackgroundImage.Source = null;
+            BackgroundImage.Visibility = Visibility.Collapsed;
+            return;
+        }
+
         try
         {
             double scaleX = VisualTreeHelper.GetDpi(this).DpiScaleX;
@@ -187,28 +212,12 @@ public partial class MainWindow : Window
                 g.CopyFromScreen(x, y, 0, 0, new System.Drawing.Size(w, h));
             }
 
-            // Blur the whole screen: downscale then upscale.
-            int sw = Math.Max(1, w / 16);
-            int sh = Math.Max(1, h / 16);
-            using var small = new System.Drawing.Bitmap(sw, sh);
-            using (var g = System.Drawing.Graphics.FromImage(small))
-            {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.DrawImage(capture, 0, 0, sw, sh);
-            }
-
-            using var blurred = new System.Drawing.Bitmap(w, h);
-            using (var g = System.Drawing.Graphics.FromImage(blurred))
-            {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.DrawImage(small, 0, 0, w, h);
-            }
-
-            BackgroundImage.Source = BitmapToImageSource(blurred);
+            // The BlurEffect on the Image (in XAML) does the blur.
+            BackgroundImage.Visibility = Visibility.Visible;
+            BackgroundImage.Source = BitmapToImageSource(capture);
         }
         catch
         {
-            // Non-fatal: keep the previous background.
         }
     }
 

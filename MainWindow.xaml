@@ -111,7 +111,11 @@
     <Grid>
         <Image x:Name="BackgroundImage"
                Stretch="Fill"
-               MouseLeftButtonDown="Background_MouseLeftButtonDown"/>
+               MouseLeftButtonDown="Background_MouseLeftButtonDown">
+            <Image.Effect>
+                <BlurEffect Radius="8" KernelType="Gaussian"/>
+            </Image.Effect>
+        </Image>
 
         <Border x:Name="RootBorder"
                 Width="740"
