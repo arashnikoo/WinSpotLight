@@ -225,10 +225,12 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ResultsList_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private void ResultsList_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (ResultsList.SelectedItem is SearchResult)
+        var container = ItemsControl.ContainerFromElement(ResultsList, e.OriginalSource as DependencyObject) as ListBoxItem;
+        if (container?.DataContext is SearchResult)
         {
+            ResultsList.SelectedItem = container.DataContext;
             ExecuteSelected();
         }
     }
