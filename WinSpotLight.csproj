@@ -15,6 +15,9 @@
     <Description>WinSpotLight-style app launcher for Windows</Description>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <!-- WFAC010 is a false positive here: this is a WPF app (which declares DPI
+         awareness in the manifest) with a small WinForms tray component. -->
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
