@@ -3,7 +3,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using WinSpotLight.Interop;
 using WinSpotLight.Models;
@@ -14,12 +13,9 @@ namespace WinSpotLight;
 public partial class MainWindow : Window
 {
     private const int HotkeyId = 0x534C;
-    private const double BarWidth = 740;
 
     private ModifierKeys _hotkeyModifiers = ModifierKeys.Control | ModifierKeys.Alt;
     private Key _hotkeyKey = Key.Space;
-
-    private bool _blurEnabled = true;
 
     private readonly SearchEngine _engine = new();
     private readonly DispatcherTimer _debounceTimer;
@@ -58,6 +54,7 @@ public partial class MainWindow : Window
         _hwndSource = HwndSource.FromHwnd(hwnd);
         _hwndSource?.AddHook(WndProc);
         NativeMethods.SetToolWindow(hwnd);
+        NativeMethods.EnableAcrylic(hwnd);
 
         if (!RegisterHotkey())
         {
@@ -87,8 +84,6 @@ public partial class MainWindow : Window
         _hotkeyModifiers = modifiers;
         _hotkeyKey = key;
     }
-
-    public void SetBlurEnabled(bool enabled) => _blurEnabled = enabled;
 
     public bool UpdateHotkey(ModifierKeys modifiers, Key key)
     {
@@ -139,7 +134,6 @@ public partial class MainWindow : Window
 
         SearchBox.Clear();
         PositionWindow();
-        CaptureBackground();
         Show();
         Activate();
         SearchBox.Focus();
@@ -161,83 +155,11 @@ public partial class MainWindow : Window
     {
         NativeMethods.GetCursorPos(out var cursor);
         var screen = System.Windows.Forms.Screen.FromPoint(new System.Drawing.Point(cursor.X, cursor.Y));
-        var bounds = screen.Bounds;
         var work = screen.WorkingArea;
         double scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
 
-        if (_blurEnabled)
-        {
-            // Full-screen blur overlay (covers the taskbar too).
-            SizeToContent = SizeToContent.Manual;
-            Left = bounds.Left / scale;
-            Top = bounds.Top / scale;
-            Width = bounds.Width / scale;
-            Height = bounds.Height / scale;
-            RootBorder.Margin = new Thickness(0, bounds.Height / scale * 0.22, 0, 0);
-        }
-        else
-        {
-            // Small centered bar (no overlay).
-            SizeToContent = SizeToContent.Height;
-            Left = work.Left / scale + (work.Width / scale - BarWidth) / 2;
-            Top = work.Top / scale + work.Height / scale * 0.22;
-            Width = BarWidth;
-            Height = double.NaN;
-            RootBorder.Margin = new Thickness(0);
-        }
-    }
-
-    private void CaptureBackground()
-    {
-        if (!_blurEnabled)
-        {
-            BackgroundImage.Source = null;
-            BackgroundImage.Visibility = Visibility.Collapsed;
-            return;
-        }
-
-        try
-        {
-            double scaleX = VisualTreeHelper.GetDpi(this).DpiScaleX;
-            double scaleY = VisualTreeHelper.GetDpi(this).DpiScaleY;
-            int x = (int)Math.Round(Left * scaleX);
-            int y = (int)Math.Round(Top * scaleY);
-            int w = (int)Math.Round(Width * scaleX);
-            int h = (int)Math.Round(Height * scaleY);
-            if (w <= 0 || h <= 0) return;
-
-            using var capture = new System.Drawing.Bitmap(w, h);
-            using (var g = System.Drawing.Graphics.FromImage(capture))
-            {
-                g.CopyFromScreen(x, y, 0, 0, new System.Drawing.Size(w, h));
-            }
-
-            // The BlurEffect on the Image (in XAML) does the blur.
-            BackgroundImage.Visibility = Visibility.Visible;
-            BackgroundImage.Source = BitmapToImageSource(capture);
-        }
-        catch
-        {
-        }
-    }
-
-    private static BitmapSource BitmapToImageSource(System.Drawing.Bitmap bitmap)
-    {
-        IntPtr hBitmap = bitmap.GetHbitmap();
-        try
-        {
-            return Imaging.CreateBitmapSourceFromHBitmap(
-                hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-        }
-        finally
-        {
-            NativeMethods.DeleteObject(hBitmap);
-        }
-    }
-
-    private void Background_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        HideWindow();
+        Left = work.Left / scale + (work.Width / scale - Width) / 2;
+        Top = work.Top / scale + work.Height / scale * 0.22;
     }
 
     private async void RunSearch(string query)

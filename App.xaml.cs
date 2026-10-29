@@ -38,7 +38,6 @@ public partial class App : System.Windows.Application
 
         var settings = SettingsStore.Load();
         _window.SetHotkey(settings.HotkeyModifiers, settings.HotkeyKey);
-        _window.SetBlurEnabled(settings.BlurEnabled);
 
         // Create the window handle now (without showing the window) so the
         // global hotkey is registered immediately at startup.
@@ -59,8 +58,7 @@ public partial class App : System.Windows.Application
         {
             SettingsStore.Save(newSettings);
 
-            _window!.SetBlurEnabled(newSettings.BlurEnabled);
-            bool applied = _window.UpdateHotkey(newSettings.HotkeyModifiers, newSettings.HotkeyKey);
+            bool applied = _window!.UpdateHotkey(newSettings.HotkeyModifiers, newSettings.HotkeyKey);
             if (applied)
             {
                 _tray!.SetHotkeyText(HotkeyFormatter.Format(newSettings.HotkeyModifiers, newSettings.HotkeyKey));

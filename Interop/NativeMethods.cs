@@ -39,9 +39,6 @@ internal static class NativeMethods
     [DllImport("user32.dll")]
     public static extern bool DestroyIcon(IntPtr hIcon);
 
-    [DllImport("gdi32.dll")]
-    public static extern bool DeleteObject(IntPtr hObject);
-
     [DllImport("shell32.dll")]
     private static extern int SHEmptyRecycleBin(IntPtr hwnd, string? root, uint flags);
 
@@ -95,5 +92,95 @@ internal static class NativeMethods
         long ex = style.ToInt64() | WS_EX_TOOLWINDOW | WS_EX_TOPMOST;
         if (IntPtr.Size == 8) SetWindowLongPtr64(hwnd, GWL_EXSTYLE, new IntPtr(ex));
         else SetWindowLong32(hwnd, GWL_EXSTYLE, new IntPtr(ex));
+    }
+
+    // --- Windows 11 acrylic backdrop + native rounded corners ---
+
+    private const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
+    private const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
+    private const int DWMSBT_TRANSIENTWINDOW = 3; // Acrylic (blurs what's behind the window)
+    private const int DWMWCP_ROUND = 2;
+
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int value, int valueSize);
+
+    private const int WCA_ACCENT_POLICY = 19;
+    private const int ACCENT_ENABLE_ACRYLICBLURBEHIND = 4;
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct AccentPolicy
+    {
+        public int AccentState;
+        public int AccentFlags;
+        public uint GradientColor;
+        public int AnimationId;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct WindowCompositionAttributeData
+    {
+        public int Attribute;
+        public IntPtr Data;
+        public int SizeOfData;
+    }
+
+    [DllImport("user32.dll")]
+    private static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
+
+    public static void EnableAcrylic(IntPtr hwnd)
+    {
+        // Native rounded corners (Windows 11).
+        try
+        {
+            int corner = DWMWCP_ROUND;
+            DwmSetWindowAttribute(hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, ref corner, sizeof(int));
+        }
+        catch
+        {
+        }
+
+        // Acrylic backdrop. Windows 11 first, then a Windows 10 fallback.
+        try
+        {
+            int backdrop = DWMSBT_TRANSIENTWINDOW;
+            if (DwmSetWindowAttribute(hwnd, DWMWA_SYSTEMBACKDROP_TYPE, ref backdrop, sizeof(int)) == 0)
+            {
+                return;
+            }
+        }
+        catch
+        {
+        }
+
+        try
+        {
+            int size = Marshal.SizeOf<AccentPolicy>();
+            IntPtr ptr = Marshal.AllocHGlobal(size);
+            try
+            {
+                var accent = new AccentPolicy
+                {
+                    AccentState = ACCENT_ENABLE_ACRYLICBLURBEHIND,
+                    AccentFlags = 2,
+                    GradientColor = 0x99FFFFFF, // ~60% white tint (AABBGGRR)
+                };
+                Marshal.StructureToPtr(accent, ptr, false);
+
+                var data = new WindowCompositionAttributeData
+                {
+                    Attribute = WCA_ACCENT_POLICY,
+                    Data = ptr,
+                    SizeOfData = size,
+                };
+                SetWindowCompositionAttribute(hwnd, ref data);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+        }
+        catch
+        {
+        }
     }
 }

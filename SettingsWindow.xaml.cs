@@ -17,7 +17,6 @@ public partial class SettingsWindow : Window
         _key = settings.HotkeyKey;
         _apply = apply;
         HotkeyBox.Text = HotkeyFormatter.Format(_modifiers, _key);
-        BlurCheckBox.IsChecked = settings.BlurEnabled;
         Loaded += (_, _) => HotkeyBox.Focus();
     }
 
@@ -58,7 +57,6 @@ public partial class SettingsWindow : Window
         {
             HotkeyModifiers = _modifiers,
             HotkeyKey = _key,
-            BlurEnabled = BlurCheckBox.IsChecked == true,
         };
 
         if (_apply(settings))
