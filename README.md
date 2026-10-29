@@ -48,5 +48,10 @@ The setup executable is written to `dist\`.
 
 Pushing to `main` triggers the
 [`.github/workflows/release.yml`](.github/workflows/release.yml) workflow, which
-builds the installer and publishes a new GitHub release automatically. The
-version is auto-incremented from the latest `v*.*.*` tag (starting at `1.0.0`).
+builds two installers and publishes them as a new GitHub release. The version is
+auto-incremented from the latest `v*.*.*` tag (starting at `1.0.0`).
+
+- `WinSpotLight-Setup-<version>.exe` — framework-dependent (smaller, but requires
+  the [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)).
+- `WinSpotLight-Setup-<version>-self-contained.exe` — self-contained (bundles the
+  .NET runtime, no prerequisites).

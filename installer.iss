@@ -7,6 +7,13 @@
   #define MyAppVersion "1.0.0"
 #endif
 
+#define MyAppSource GetEnv("PUBLISH_DIR")
+#if MyAppSource == ""
+  #define MyAppSource "publish"
+#endif
+
+#define MySetupSuffix GetEnv("SETUP_SUFFIX")
+
 #define MyAppName "WinSpotLight"
 #define MyAppExeName "WinSpotLight.exe"
 
@@ -21,7 +28,7 @@ DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 UninstallDisplayIcon={app}\{#MyAppExeName}
 OutputDir=dist
-OutputBaseFilename=WinSpotLight-Setup-{#MyAppVersion}
+OutputBaseFilename=WinSpotLight-Setup-{#MyAppVersion}{#MySetupSuffix}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -29,7 +36,7 @@ PrivilegesRequired=admin
 ArchitecturesInstallIn64BitMode=x64compatible
 
 [Files]
-Source: "publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppSource}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
