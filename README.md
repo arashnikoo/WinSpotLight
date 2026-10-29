@@ -1,7 +1,12 @@
 # WinSpotLight
 
-A WinSpotLight-style launcher for Windows. It runs in the system tray and opens a
-search bar on a global hotkey (default `Alt+Space`).
+WinSpotLight is a **Spotlight-style launcher for Windows**, inspired by
+[macOS Spotlight](https://support.apple.com/guide/mac-help/search-with-spotlight-mchlp1008/mac).
+
+Like Spotlight on the Mac, it runs quietly in the background and pops up a
+centered search bar when you press a hotkey (default `Alt+Space` — the Windows
+analogue of `⌘+Space`). Type to instantly search and launch apps, files, system
+commands, or evaluate a calculation, all without touching the mouse.
 
 ## Features
 
