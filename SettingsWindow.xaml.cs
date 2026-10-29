@@ -1,0 +1,70 @@
+using System.Windows;
+using System.Windows.Input;
+using Spotlight.Services;
+
+namespace Spotlight;
+
+public partial class SettingsWindow : Window
+{
+    private readonly Func<ModifierKeys, Key, bool> _apply;
+    private ModifierKeys _modifiers;
+    private Key _key;
+
+    public SettingsWindow(ModifierKeys modifiers, Key key, Func<ModifierKeys, Key, bool> apply)
+    {
+        InitializeComponent();
+        _modifiers = modifiers;
+        _key = key;
+        _apply = apply;
+        HotkeyBox.Text = HotkeyFormatter.Format(_modifiers, _key);
+        Loaded += (_, _) => HotkeyBox.Focus();
+    }
+
+    private void HotkeyBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        Key key = e.Key == Key.System ? e.SystemKey : e.Key;
+        if (IsModifierKey(key))
+        {
+            e.Handled = true;
+            return;
+        }
+
+        ModifierKeys mods = Keyboard.Modifiers;
+        if (mods == ModifierKeys.None)
+        {
+            MessageText.Text = "Include at least one modifier (Ctrl, Alt, Shift, or Win).";
+            e.Handled = true;
+            return;
+        }
+
+        _modifiers = mods;
+        _key = key;
+        MessageText.Text = string.Empty;
+        HotkeyBox.Text = HotkeyFormatter.Format(_modifiers, _key);
+        e.Handled = true;
+    }
+
+    private static bool IsModifierKey(Key key) => key is
+        Key.LeftCtrl or Key.RightCtrl or
+        Key.LeftAlt or Key.RightAlt or
+        Key.LeftShift or Key.RightShift or
+        Key.LWin or Key.RWin or
+        Key.System;
+
+    private void Save_Click(object sender, RoutedEventArgs e)
+    {
+        if (_apply(_modifiers, _key))
+        {
+            DialogResult = true;
+        }
+        else
+        {
+            MessageText.Text = "That combination is already in use by another program. Try a different one.";
+        }
+    }
+
+    private void Cancel_Click(object sender, RoutedEventArgs e)
+    {
+        DialogResult = false;
+    }
+}
