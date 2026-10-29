@@ -1,13 +1,13 @@
 using System.Threading;
 using System.Windows;
-using Spotlight.Services;
+using WinSpotLight.Services;
 
-namespace Spotlight;
+namespace WinSpotLight;
 
 public partial class App : System.Windows.Application
 {
-    private const string MutexName = "Spotlight.Launcher.SingleInstance";
-    private const string OpenEventName = "Spotlight.Launcher.Open";
+    private const string MutexName = "WinSpotLight.Launcher.SingleInstance";
+    private const string OpenEventName = "WinSpotLight.Launcher.Open";
 
     private Mutex? _mutex;
     private bool _ownsMutex;
@@ -119,7 +119,7 @@ public partial class App : System.Windows.Application
         LogError(e.Exception);
         System.Windows.MessageBox.Show(
             e.Exception.Message,
-            "Spotlight error",
+            "WinSpotLight error",
             MessageBoxButton.OK,
             MessageBoxImage.Error);
         e.Handled = true;

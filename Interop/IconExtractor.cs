@@ -6,7 +6,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Spotlight.Interop;
+namespace WinSpotLight.Interop;
 
 public static class IconExtractor
 {

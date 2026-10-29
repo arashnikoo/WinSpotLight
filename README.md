@@ -1,6 +1,6 @@
-# Spotlight
+# WinSpotLight
 
-A Spotlight-style launcher for Windows. It runs in the system tray and opens a
+A WinSpotLight-style launcher for Windows. It runs in the system tray and opens a
 search bar on a global hotkey (default `Alt+Space`).
 
 ## Features
@@ -23,7 +23,7 @@ Requires [Inno Setup 6](https://jrsoftware.org/isinfo.php). Publish first, then
 compile the installer:
 
 ```powershell
-dotnet publish Spotlight.csproj -c Release -r win-x64 --self-contained true -o publish
+dotnet publish WinSpotLight.csproj -c Release -r win-x64 --self-contained true -o publish
 $env:APP_VERSION = "1.0.0"
 & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
 ```

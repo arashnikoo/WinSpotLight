@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Spotlight.Services;
+namespace WinSpotLight.Services;
 
 public sealed class TrayIconService : IDisposable
 {
@@ -10,13 +10,13 @@ public sealed class TrayIconService : IDisposable
 
     public TrayIconService(Action onOpen, Action onSettings, Action onExit)
     {
-        _openItem = new ToolStripMenuItem("Open Spotlight");
+        _openItem = new ToolStripMenuItem("Open WinSpotLight");
         _openItem.Click += (_, _) => onOpen();
 
         _icon = new NotifyIcon
         {
             Icon = SystemIcons.Application,
-            Text = "Spotlight Launcher",
+            Text = "WinSpotLight Launcher",
             Visible = true,
             ContextMenuStrip = BuildMenu(_openItem, onSettings, onExit),
         };
@@ -50,8 +50,8 @@ public sealed class TrayIconService : IDisposable
 
     public void SetHotkeyText(string display)
     {
-        _icon.Text = $"Spotlight Launcher ({display})";
-        _openItem.Text = $"Open Spotlight  ({display})";
+        _icon.Text = $"WinSpotLight Launcher ({display})";
+        _openItem.Text = $"Open WinSpotLight  ({display})";
     }
 
     public void Show() => _icon.Visible = true;

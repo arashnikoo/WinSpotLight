@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Windows;
-using Spotlight.Calculator;
-using Spotlight.Models;
+using WinSpotLight.Calculator;
+using WinSpotLight.Models;
 
-namespace Spotlight.Search;
+namespace WinSpotLight.Search;
 
 public sealed class CalculatorSearchProvider : ISearchProvider
 {

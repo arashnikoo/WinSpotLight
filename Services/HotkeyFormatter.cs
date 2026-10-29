@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 
-namespace Spotlight.Services;
+namespace WinSpotLight.Services;
 
 public static class HotkeyFormatter
 {

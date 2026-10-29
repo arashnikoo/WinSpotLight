@@ -1,13 +1,13 @@
 using System.IO;
 using System.Text.Json;
 
-namespace Spotlight.Services;
+namespace WinSpotLight.Services;
 
 public static class SettingsStore
 {
     private static readonly string SettingsPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "Spotlight",
+        "WinSpotLight",
         "settings.json");
 
     private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };

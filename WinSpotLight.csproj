@@ -7,12 +7,12 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>Spotlight</AssemblyName>
-    <RootNamespace>Spotlight</RootNamespace>
+    <AssemblyName>WinSpotLight</AssemblyName>
+    <RootNamespace>WinSpotLight</RootNamespace>
     <Version>1.0.0</Version>
-    <Company>Spotlight</Company>
-    <Product>Spotlight Launcher</Product>
-    <Description>Spotlight-style app launcher for Windows</Description>
+    <Company>WinSpotLight</Company>
+    <Product>WinSpotLight Launcher</Product>
+    <Description>WinSpotLight-style app launcher for Windows</Description>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>

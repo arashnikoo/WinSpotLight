@@ -1,6 +1,6 @@
 using System.Windows.Media;
 
-namespace Spotlight.Models;
+namespace WinSpotLight.Models;
 
 public sealed class SearchResult
 {

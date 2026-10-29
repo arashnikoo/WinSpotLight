@@ -46,7 +46,7 @@ jobs:
       - name: Publish
         shell: pwsh
         run: |
-          dotnet publish Spotlight.csproj -c Release -r win-x64 --self-contained true `
+          dotnet publish WinSpotLight.csproj -c Release -r win-x64 --self-contained true `
             -p:Version=${{ steps.version.outputs.version }} -o publish
 
       - name: Install Inno Setup
@@ -65,6 +65,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          name: Spotlight ${{ steps.version.outputs.version }}
+          name: WinSpotLight ${{ steps.version.outputs.version }}
           files: dist/*.exe
           generate_release_notes: true

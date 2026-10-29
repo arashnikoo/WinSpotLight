@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Spotlight.Calculator;
+namespace WinSpotLight.Calculator;
 
 public static class ExpressionParser
 {

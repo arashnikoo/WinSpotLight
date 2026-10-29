@@ -4,11 +4,11 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Spotlight.Interop;
-using Spotlight.Models;
-using Spotlight.Search;
+using WinSpotLight.Interop;
+using WinSpotLight.Models;
+using WinSpotLight.Search;
 
-namespace Spotlight;
+namespace WinSpotLight;
 
 public partial class MainWindow : Window
 {
@@ -60,7 +60,7 @@ public partial class MainWindow : Window
             System.Windows.MessageBox.Show(
                 this,
                 "Could not register the hotkey. Another program may be using it.",
-                "Spotlight",
+                "WinSpotLight",
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
         }

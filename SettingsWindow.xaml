@@ -1,7 +1,7 @@
-<Window x:Class="Spotlight.SettingsWindow"
+<Window x:Class="WinSpotLight.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Spotlight Settings"
+        Title="WinSpotLight Settings"
         Width="400"
         SizeToContent="Height"
         ResizeMode="NoResize"
@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
-                   Text="Open Spotlight"
+                   Text="Open WinSpotLight"
                    FontSize="16"
                    FontWeight="SemiBold"
                    Foreground="#1A1A1A"/>

@@ -3,10 +3,10 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
-using Spotlight.Interop;
-using Spotlight.Models;
+using WinSpotLight.Interop;
+using WinSpotLight.Models;
 
-namespace Spotlight.Search;
+namespace WinSpotLight.Search;
 
 public sealed class AppSearchProvider : ISearchProvider
 {

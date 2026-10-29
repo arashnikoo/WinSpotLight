@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace Spotlight.Services;
+namespace WinSpotLight.Services;
 
 public sealed class AppSettings
 {

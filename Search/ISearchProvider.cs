@@ -1,6 +1,6 @@
-using Spotlight.Models;
+using WinSpotLight.Models;
 
-namespace Spotlight.Search;
+namespace WinSpotLight.Search;
 
 public interface ISearchProvider
 {

@@ -1,4 +1,4 @@
-; Spotlight installer (Inno Setup 6)
+; WinSpotLight installer (Inno Setup 6)
 ;
 ; Version is taken from the APP_VERSION environment variable and falls back
 ; to 1.0.0 for local builds. In CI it is injected by the release workflow.
@@ -7,20 +7,20 @@
   #define MyAppVersion "1.0.0"
 #endif
 
-#define MyAppName "Spotlight"
-#define MyAppExeName "Spotlight.exe"
+#define MyAppName "WinSpotLight"
+#define MyAppExeName "WinSpotLight.exe"
 
 [Setup]
 AppId={{8B7A5C3D-2E1F-4A9B-8C6D-1F3E5A7B9C0D}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-AppPublisher=Spotlight
+AppPublisher=WinSpotLight
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 UninstallDisplayIcon={app}\{#MyAppExeName}
 OutputDir=dist
-OutputBaseFilename=Spotlight-Setup-{#MyAppVersion}
+OutputBaseFilename=WinSpotLight-Setup-{#MyAppVersion}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern

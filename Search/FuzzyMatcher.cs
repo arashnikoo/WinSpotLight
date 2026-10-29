@@ -1,4 +1,4 @@
-namespace Spotlight.Search;
+namespace WinSpotLight.Search;
 
 public static class FuzzyMatcher
 {

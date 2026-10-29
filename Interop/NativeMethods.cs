@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Spotlight.Interop;
+namespace WinSpotLight.Interop;
 
 internal static class NativeMethods
 {

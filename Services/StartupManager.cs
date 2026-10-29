@@ -1,11 +1,11 @@
 using Microsoft.Win32;
 
-namespace Spotlight.Services;
+namespace WinSpotLight.Services;
 
 public static class StartupManager
 {
     private const string RunKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
-    private const string ValueName = "SpotlightLauncher";
+    private const string ValueName = "WinSpotLightLauncher";
 
     public static bool IsEnabled()
     {

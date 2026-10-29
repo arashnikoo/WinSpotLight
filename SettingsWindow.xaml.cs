@@ -1,8 +1,8 @@
 using System.Windows;
 using System.Windows.Input;
-using Spotlight.Services;
+using WinSpotLight.Services;
 
-namespace Spotlight;
+namespace WinSpotLight;
 
 public partial class SettingsWindow : Window
 {
