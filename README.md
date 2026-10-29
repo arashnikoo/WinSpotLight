@@ -17,6 +17,9 @@ search bar on a global hotkey (default `Alt+Space`).
 dotnet build -c Release
 ```
 
+Pull requests run a CI build check (`.github/workflows/build.yml`) that must pass
+before merging.
+
 ## Build the installer
 
 Requires [Inno Setup 6](https://jrsoftware.org/isinfo.php). Publish first, then
