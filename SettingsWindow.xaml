@@ -38,7 +38,7 @@
                 Background="#0A000000"
                 Padding="12,10">
             <TextBox x:Name="HotkeyBox"
-                     Text="Alt + Space"
+                     Text="Ctrl + Alt + Space"
                      FontSize="16"
                      Foreground="#1A1A1A"
                      Background="Transparent"

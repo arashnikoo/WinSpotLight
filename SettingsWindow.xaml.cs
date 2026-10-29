@@ -6,15 +6,15 @@ namespace WinSpotLight;
 
 public partial class SettingsWindow : Window
 {
-    private readonly Func<ModifierKeys, Key, bool> _apply;
+    private readonly Func<AppSettings, bool> _apply;
     private ModifierKeys _modifiers;
     private Key _key;
 
-    public SettingsWindow(ModifierKeys modifiers, Key key, Func<ModifierKeys, Key, bool> apply)
+    public SettingsWindow(AppSettings settings, Func<AppSettings, bool> apply)
     {
         InitializeComponent();
-        _modifiers = modifiers;
-        _key = key;
+        _modifiers = settings.HotkeyModifiers;
+        _key = settings.HotkeyKey;
         _apply = apply;
         HotkeyBox.Text = HotkeyFormatter.Format(_modifiers, _key);
         Loaded += (_, _) => HotkeyBox.Focus();
@@ -53,7 +53,13 @@ public partial class SettingsWindow : Window
 
     private void Save_Click(object sender, RoutedEventArgs e)
     {
-        if (_apply(_modifiers, _key))
+        var settings = new AppSettings
+        {
+            HotkeyModifiers = _modifiers,
+            HotkeyKey = _key,
+        };
+
+        if (_apply(settings))
         {
             DialogResult = true;
         }

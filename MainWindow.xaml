@@ -4,8 +4,7 @@
         Title="WinSpotLight"
         Width="740"
         WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
+        Background="#F2FFFFFF"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         Topmost="True"
@@ -111,13 +110,8 @@
     </Window.Resources>
 
     <Border x:Name="RootBorder"
-            CornerRadius="14"
-            Background="#F2FDFDFD"
             BorderBrush="#26000000"
             BorderThickness="1">
-        <Border.Effect>
-            <DropShadowEffect BlurRadius="28" ShadowDepth="6" Direction="270" Opacity="0.30"/>
-        </Border.Effect>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -182,6 +176,6 @@
                        HorizontalAlignment="Center"
                        Margin="0,0,0,18"
                        Visibility="Collapsed"/>
-        </Grid>
+            </Grid>
     </Border>
 </Window>

@@ -53,24 +53,18 @@ public partial class App : System.Windows.Application
 
     private void OpenSettings()
     {
-        var dialog = new SettingsWindow(
-            _window!.HotkeyModifiers,
-            _window.HotkeyKey,
-            (modifiers, key) =>
-            {
-                SettingsStore.Save(new AppSettings
-                {
-                    HotkeyModifiers = modifiers,
-                    HotkeyKey = key,
-                });
+        var current = SettingsStore.Load();
+        var dialog = new SettingsWindow(current, newSettings =>
+        {
+            SettingsStore.Save(newSettings);
 
-                bool applied = _window.UpdateHotkey(modifiers, key);
-                if (applied)
-                {
-                    _tray!.SetHotkeyText(HotkeyFormatter.Format(modifiers, key));
-                }
-                return applied;
-            });
+            bool applied = _window!.UpdateHotkey(newSettings.HotkeyModifiers, newSettings.HotkeyKey);
+            if (applied)
+            {
+                _tray!.SetHotkeyText(HotkeyFormatter.Format(newSettings.HotkeyModifiers, newSettings.HotkeyKey));
+            }
+            return applied;
+        });
 
         dialog.ShowDialog();
     }

@@ -14,7 +14,7 @@ public partial class MainWindow : Window
 {
     private const int HotkeyId = 0x534C;
 
-    private ModifierKeys _hotkeyModifiers = ModifierKeys.Alt;
+    private ModifierKeys _hotkeyModifiers = ModifierKeys.Control | ModifierKeys.Alt;
     private Key _hotkeyKey = Key.Space;
 
     private readonly SearchEngine _engine = new();
@@ -54,6 +54,7 @@ public partial class MainWindow : Window
         _hwndSource = HwndSource.FromHwnd(hwnd);
         _hwndSource?.AddHook(WndProc);
         NativeMethods.SetToolWindow(hwnd);
+        NativeMethods.EnableAcrylic(hwnd);
 
         if (!RegisterHotkey())
         {
@@ -132,8 +133,8 @@ public partial class MainWindow : Window
         _previousForeground = NativeMethods.GetForegroundWindow();
 
         SearchBox.Clear();
-        Show();
         PositionWindow();
+        Show();
         Activate();
         SearchBox.Focus();
         RunSearch("");
