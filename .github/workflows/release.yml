@@ -43,23 +43,38 @@ jobs:
           "tag=v$next" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           Write-Host "Building version $next"
 
-      - name: Publish
+      - name: Publish (self-contained)
         shell: pwsh
         run: |
           dotnet publish WinSpotLight.csproj -c Release -r win-x64 --self-contained true `
-            -p:Version=${{ steps.version.outputs.version }} -o publish
+            -p:Version=${{ steps.version.outputs.version }} -o publish\self-contained
+
+      - name: Publish (framework-dependent)
+        shell: pwsh
+        run: |
+          dotnet publish WinSpotLight.csproj -c Release -r win-x64 --self-contained false `
+            -p:Version=${{ steps.version.outputs.version }} -o publish\framework-dependent
 
       - name: Install Inno Setup
         shell: pwsh
         run: choco install innosetup --no-progress -y
 
-      - name: Build installer
+      - name: Build installer (self-contained)
         shell: pwsh
         env:
           APP_VERSION: ${{ steps.version.outputs.version }}
+          PUBLISH_DIR: publish\self-contained
+          SETUP_SUFFIX: "-self-contained"
         run: |
-          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-          & $iscc installer.iss
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+
+      - name: Build installer (framework-dependent)
+        shell: pwsh
+        env:
+          APP_VERSION: ${{ steps.version.outputs.version }}
+          PUBLISH_DIR: publish\framework-dependent
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
 
       - name: Create release
         uses: softprops/action-gh-release@v2
