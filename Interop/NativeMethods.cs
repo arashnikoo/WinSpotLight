@@ -39,6 +39,9 @@ internal static class NativeMethods
     [DllImport("user32.dll")]
     public static extern bool DestroyIcon(IntPtr hIcon);
 
+    [DllImport("gdi32.dll")]
+    public static extern bool DeleteObject(IntPtr hObject);
+
     [DllImport("shell32.dll")]
     private static extern int SHEmptyRecycleBin(IntPtr hwnd, string? root, uint flags);
 

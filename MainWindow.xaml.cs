@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using WinSpotLight.Interop;
 using WinSpotLight.Models;
@@ -132,8 +133,9 @@ public partial class MainWindow : Window
         _previousForeground = NativeMethods.GetForegroundWindow();
 
         SearchBox.Clear();
-        Show();
         PositionWindow();
+        CaptureBackground();
+        Show();
         Activate();
         SearchBox.Focus();
         RunSearch("");
@@ -157,8 +159,76 @@ public partial class MainWindow : Window
         var work = screen.WorkingArea;
         double scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
 
-        Left = work.Left / scale + (work.Width / scale - Width) / 2;
-        Top = work.Top / scale + work.Height / scale * 0.22;
+        // Cover the whole monitor with the blur overlay.
+        Left = work.Left / scale;
+        Top = work.Top / scale;
+        Width = work.Width / scale;
+        Height = work.Height / scale;
+
+        // Place the bar near the top, centered.
+        RootBorder.Margin = new Thickness(0, work.Height / scale * 0.22, 0, 0);
+    }
+
+    private void CaptureBackground()
+    {
+        try
+        {
+            double scaleX = VisualTreeHelper.GetDpi(this).DpiScaleX;
+            double scaleY = VisualTreeHelper.GetDpi(this).DpiScaleY;
+            int x = (int)Math.Round(Left * scaleX);
+            int y = (int)Math.Round(Top * scaleY);
+            int w = (int)Math.Round(Width * scaleX);
+            int h = (int)Math.Round(Height * scaleY);
+            if (w <= 0 || h <= 0) return;
+
+            using var capture = new System.Drawing.Bitmap(w, h);
+            using (var g = System.Drawing.Graphics.FromImage(capture))
+            {
+                g.CopyFromScreen(x, y, 0, 0, new System.Drawing.Size(w, h));
+            }
+
+            // Blur the whole screen: downscale then upscale.
+            int sw = Math.Max(1, w / 16);
+            int sh = Math.Max(1, h / 16);
+            using var small = new System.Drawing.Bitmap(sw, sh);
+            using (var g = System.Drawing.Graphics.FromImage(small))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(capture, 0, 0, sw, sh);
+            }
+
+            using var blurred = new System.Drawing.Bitmap(w, h);
+            using (var g = System.Drawing.Graphics.FromImage(blurred))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(small, 0, 0, w, h);
+            }
+
+            BackgroundImage.Source = BitmapToImageSource(blurred);
+        }
+        catch
+        {
+            // Non-fatal: keep the previous background.
+        }
+    }
+
+    private static BitmapSource BitmapToImageSource(System.Drawing.Bitmap bitmap)
+    {
+        IntPtr hBitmap = bitmap.GetHbitmap();
+        try
+        {
+            return Imaging.CreateBitmapSourceFromHBitmap(
+                hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+        }
+        finally
+        {
+            NativeMethods.DeleteObject(hBitmap);
+        }
+    }
+
+    private void Background_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        HideWindow();
     }
 
     private async void RunSearch(string query)
