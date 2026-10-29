@@ -156,17 +156,17 @@ public partial class MainWindow : Window
     {
         NativeMethods.GetCursorPos(out var cursor);
         var screen = System.Windows.Forms.Screen.FromPoint(new System.Drawing.Point(cursor.X, cursor.Y));
-        var work = screen.WorkingArea;
+        var bounds = screen.Bounds;
         double scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
 
-        // Cover the whole monitor with the blur overlay.
-        Left = work.Left / scale;
-        Top = work.Top / scale;
-        Width = work.Width / scale;
-        Height = work.Height / scale;
+        // Cover the whole monitor (including the taskbar) with the blur overlay.
+        Left = bounds.Left / scale;
+        Top = bounds.Top / scale;
+        Width = bounds.Width / scale;
+        Height = bounds.Height / scale;
 
         // Place the bar near the top, centered.
-        RootBorder.Margin = new Thickness(0, work.Height / scale * 0.22, 0, 0);
+        RootBorder.Margin = new Thickness(0, bounds.Height / scale * 0.22, 0, 0);
     }
 
     private void CaptureBackground()
