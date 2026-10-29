@@ -4,7 +4,7 @@
         Title="WinSpotLight"
         Width="740"
         WindowStyle="None"
-        Background="#B3FFFFFF"
+        Background="#F2FFFFFF"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         Topmost="True"
