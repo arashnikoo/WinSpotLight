@@ -113,7 +113,7 @@
                Stretch="Fill"
                MouseLeftButtonDown="Background_MouseLeftButtonDown">
             <Image.Effect>
-                <BlurEffect Radius="8" KernelType="Gaussian"/>
+                <BlurEffect Radius="8" KernelType="Gaussian" RenderingBias="Quality"/>
             </Image.Effect>
         </Image>
 
