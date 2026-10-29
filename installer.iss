@@ -15,6 +15,7 @@ AppId={{8B7A5C3D-2E1F-4A9B-8C6D-1F3E5A7B9C0D}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher=WinSpotLight
+SetupIconFile=icon.ico
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes

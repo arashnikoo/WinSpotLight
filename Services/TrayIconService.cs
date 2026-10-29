@@ -15,7 +15,7 @@ public sealed class TrayIconService : IDisposable
 
         _icon = new NotifyIcon
         {
-            Icon = SystemIcons.Application,
+            Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application,
             Text = "WinSpotLight Launcher",
             Visible = true,
             ContextMenuStrip = BuildMenu(_openItem, onSettings, onExit),

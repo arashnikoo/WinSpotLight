@@ -14,6 +14,7 @@
     <Product>WinSpotLight Launcher</Product>
     <Description>WinSpotLight-style app launcher for Windows</Description>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
